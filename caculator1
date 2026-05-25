@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #4F33B0, #D235A5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            position: relative;
+            text-align: center;
+        }
+        .calculator.dark {
+            background-color: #1A1A1A;
+            color: #fff;
+        }
+        .theme-toggler {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: #333;
+            color: white;
+        }
+        .dark .theme-toggler {
+            background: #fff;
+            color: #000;
+        }
+        .display-screen {
+            width: 100%;
+            height: 60px;
+            background: #f3f3f3;
+            border-radius: 5px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        .dark .display-screen {
+            background: #333;
+            color: white;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #f0f0f0;
+        }
+        .dark button {
+            background: #2a2a2a;
+            color: white;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        .btn-operator {
+            background: #FFD0FB;
+            color: #f967f3;
+        }
+        .dark .btn-operator {
+            background: #3a1c3f;
+            color: #ff80ff;
+        }
+        .btn-equal {
+            background: #ADF9E7;
+            color: black;
+            grid-row: span 2;
+        }
+        .dark .btn-equal {
+            background: #1a4a2a;
+            color: white;
+        }
+        .btn-clear {
+            background: #FFD5D8;
+            color: #fc4552;
+        }
+        .dark .btn-clear {
+            background: #3f1c1c;
+            color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="theme-toggler">Dark Mode</div>
+        <div class="display-screen" id="display">0</div>
+        <div class="buttons">
+            <button class="btn-clear" id="clear">C</button>
+            <button class="btn-operator" id="divide">÷</button>
+            <button class="btn-operator" id="multiply">×</button>
+            <button class="btn-operator" id="backspace">⌫</button>
+
+            <button class="btn-number" id="7">7</button>
+            <button class="btn-number" id="8">8</button>
+            <button class="btn-number" id="9">9</button>
+            <button class="btn-operator" id="subtract">-</button>
+
+            <button class="btn-number" id="4">4</button>
+            <button class="btn-number" id="5">5</button>
+            <button class="btn-number" id="6">6</button>
+            <button class="btn-operator" id="add">+</button>
+
+            <button class="btn-number" id="1">1</button>
+            <button class="btn-number" id="2">2</button>
+            <button class="btn-number" id="3">3</button>
+            <button class="btn-equal" id="equal">=</button>
+
+            <button class="btn-operator" id="open">(</button>
+            <button class="btn-number" id="0">0</button>
+            <button class="btn-operator" id="close">)</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById("display");
+        const buttons = document.querySelectorAll("button");
+        const themeToggler = document.querySelector(".theme-toggler");
+        const calculator = document.querySelector(".calculator");
+
+        let expression = "";
+
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                let value = button.innerText;
+
+                if (button.id === "clear") {
+                    expression = "";
+                } else if (button.id === "backspace") {
+                    expression = expression.slice(0, -1);
+                } else if (button.id === "equal") {
+                    try {
+                        // Replace '÷' with '/' and '×' with '*' before evaluation
+                        let formattedExpression = expression.replace(/÷/g, "/").replace(/×/g, "*");
+                        expression = eval(formattedExpression).toString();
+                    } catch {
+                        expression = "Error";
+                    }
+                } else {
+                    if (expression === "0" || expression === "Error") {
+                        expression = "";
+                    }
+                    expression += value;
+                }
+                display.innerText = expression || "0";
+            });
+        });
+
+        themeToggler.addEventListener("click", () => {
+            calculator.classList.toggle("dark");
+            themeToggler.innerText = calculator.classList.contains("dark") ? "Light Mode" : "Dark Mode";
+        });
+    </script>
+
+</body>
+</html>
